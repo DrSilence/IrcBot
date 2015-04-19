@@ -3,10 +3,9 @@
  */
 package de.drsilence.ircbot;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
 import de.drsilence.irclib.IrcConnection;
+
+
 
 /**
  * @author drsilence
@@ -25,16 +24,17 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		try {
-			IrcConnection.init();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		String server 	= "irc.twitch.tv";
+        String pass   	= "oauth:7appgukzxulffvv59u93vbawcuncm5";
+        String nick 	= "da_checker";
+        String login 	= "da_checker";
+        String channel 	= "#nope_smokemideveryday";
+
+		IrcConnection irc = new IrcConnection();
+		irc.connect(server, nick, login, pass);
+		irc.irc_cmd_join(channel);
+		irc.run();
 	}
 
 }

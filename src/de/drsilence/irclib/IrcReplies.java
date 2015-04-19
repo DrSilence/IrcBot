@@ -751,5 +751,23 @@ public enum IrcReplies {
 		}
 		return ERR_NOTDEFINED;
 	}
+	
+	/**
+	 * Returns IRC1459 error/reply code of this Enum.
+	 * 
+	 * @return error/reply code.
+	 */
+	public int getErrorCode() {
+		return this._err_num;
+	}
+	
+	/**
+	 * Returns IRC1459 error/reply message.
+	 * 
+	 * @return error/replay text.
+	 */
+	public String getErrorString() {
+		return this._err_decription;
+	}
 
 }
