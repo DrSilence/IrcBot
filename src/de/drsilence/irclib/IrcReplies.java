@@ -279,12 +279,12 @@ public enum IrcReplies {
 	RPL_AWAY ( 301 , "<nick> :<away message>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_AWAY RPL_AWAY
+	 * @see #RPL_AWAY RPL_AWAY
 	 */
 	RPL_UNAWAY ( 305 , ":You are no longer marked as being away" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_AWAY RPL_AWAY
+	 * @see #RPL_AWAY RPL_AWAY
 	 */
 	RPL_NOWAWAY ( 306 , ":You have been marked as being away" ),
 
@@ -300,27 +300,27 @@ public enum IrcReplies {
 	RPL_WHOISUSER ( 311 , "<nick> <user> <host> * :<real name>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_WHOISUSER RPL_WHOISUSER
+	 * @see #RPL_WHOISUSER RPL_WHOISUSER
 	 */
 	RPL_WHOISSERVER ( 312 , "<nick> <server> :<server info>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_WHOISUSER RPL_WHOISUSER
+	 * @see #RPL_WHOISUSER RPL_WHOISUSER
 	 */
 	RPL_WHOISOPERATOR ( 313 , "<nick> :is an IRC operator" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_WHOISUSER RPL_WHOISUSER
+	 * @see #RPL_WHOISUSER RPL_WHOISUSER
 	 */
 	RPL_WHOISIDLE ( 317 , "<nick> <integer> :seconds idle" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_WHOISUSER RPL_WHOISUSER
+	 * @see #RPL_WHOISUSER RPL_WHOISUSER
 	 */
 	RPL_ENDOFWHOIS ( 318 , "<nick> :End of /WHOIS list" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_WHOISUSER RPL_WHOISUSER
+	 * @see #RPL_WHOISUSER RPL_WHOISUSER
 	 */
 	RPL_WHOISCHANNELS ( 319 , "<nick> :{[@|+]<channel><space>}" ),
 	
@@ -332,7 +332,7 @@ public enum IrcReplies {
 	RPL_WHOWASUSER ( 314 , "<nick> <user> <host> * :<real name>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_WHOWASUSER RPL_WHOWASUSER
+	 * @see #RPL_WHOWASUSER RPL_WHOWASUSER
 	 */
 	RPL_ENDOFWHOWAS ( 369 , "<nick> :End of WHOWAS" ),
 	
@@ -344,12 +344,12 @@ public enum IrcReplies {
 	RPL_LISTSTART ( 321 , "Channel :Users Name" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_LISTSTART RPL_LISTSTART
+	 * @see #RPL_LISTSTART RPL_LISTSTART
 	 */
 	RPL_LIST ( 322 , "<channel> <# visible> :<topic>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_LISTSTART RPL_LISTSTART
+	 * @see #RPL_LISTSTART RPL_LISTSTART
 	 */
 	RPL_LISTEND ( 323 , ":End of /LIST" ),
 	
@@ -365,7 +365,7 @@ public enum IrcReplies {
 	RPL_NOTOPIC ( 331 , "<channel> :No topic is set" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_NOTOPIC RPL_NOTOPIC
+	 * @see #RPL_NOTOPIC RPL_NOTOPIC
 	 */
 	RPL_TOPIC ( 332 , "<channel> :<topic>" ),
 
@@ -395,7 +395,7 @@ public enum IrcReplies {
 	RPL_WHOREPLY ( 352 , "<channel> <user> <host> <server> <nick> <H|G>[*][@|+] :<hopcount> <real name>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_WHOREPLY RPL_WHOREPLY
+	 * @see #RPL_WHOREPLY RPL_WHOREPLY
 	 */
 	RPL_ENDOFWHO ( 315 , "<name> :End of /WHO list" ),
 	
@@ -408,7 +408,7 @@ public enum IrcReplies {
 	RPL_NAMREPLY ( 353 , "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_NAMREPLY RPL_NAMREPLY
+	 * @see #RPL_NAMREPLY RPL_NAMREPLY
 	 */
 	RPL_ENDOFNAMES ( 366 , "<channel> :End of /NAMES list" ),
 	
@@ -419,7 +419,7 @@ public enum IrcReplies {
 	RPL_LINKS ( 364 , "<mask> <server> :<hopcount> <server info>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_LINKS RPL_LINKS
+	 * @see #RPL_LINKS RPL_LINKS
 	 */
 	RPL_ENDOFLINKS ( 365 , "<mask> :End of /LINKS list" ),
 
@@ -431,7 +431,7 @@ public enum IrcReplies {
 	RPL_BANLIST ( 367 , "<channel> <banid>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_BANLIST RPL_BANLIST
+	 * @see #RPL_BANLIST RPL_BANLIST
 	 */
 	RPL_ENDOFBANLIST ( 368 , "<channel> :End of channel ban list" ),
 
@@ -442,7 +442,7 @@ public enum IrcReplies {
 	RPL_INFO ( 371 , ":<string>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_INFO RPL_INFO
+	 * @see #RPL_INFO RPL_INFO
 	 */
 	RPL_ENDOFINFO ( 374 , ":End of /INFO list" ),
 
@@ -454,12 +454,12 @@ public enum IrcReplies {
 	RPL_MOTDSTART ( 375 , ":- <server> Message of the day - " ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_MOTDSTART RPL_MOTDSTART
+	 * @see #RPL_MOTDSTART RPL_MOTDSTART
 	 */
 	RPL_MOTD ( 372 , ":- <text>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_MOTDSTART RPL_MOTDSTART
+	 * @see #RPL_MOTDSTART RPL_MOTDSTART
 	 */
 	RPL_ENDOFMOTD ( 376 , ":End of /MOTD command" ),
 
@@ -490,17 +490,17 @@ public enum IrcReplies {
 	RPL_USERSSTART ( 392 , ":UserID Terminal Host" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_USERSSTART RPL_USERSSTART
+	 * @see #RPL_USERSSTART RPL_USERSSTART
 	 */
 	RPL_USERS ( 393 , ":%-8s %-9s %-8s" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_USERSSTART RPL_USERSSTART
+	 * @see #RPL_USERSSTART RPL_USERSSTART
 	 */
 	RPL_ENDOFUSERS ( 394 , ":End of users" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_USERSSTART RPL_USERSSTART
+	 * @see #RPL_USERSSTART RPL_USERSSTART
 	 */
 	RPL_NOUSERS ( 395 , ":Nobody logged in" ),
 
@@ -518,42 +518,42 @@ public enum IrcReplies {
 	RPL_TRACELINK ( 200 , "Link <version & debug level> <destination> <next server>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACELINK RPL_TRACELINK
+	 * @see #RPL_TRACELINK RPL_TRACELINK
 	 */
 	RPL_TRACECONNECTING ( 201 , "Try. <class> <server>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACELINK RPL_TRACELINK
+	 * @see #RPL_TRACELINK RPL_TRACELINK
 	 */
 	RPL_TRACEHANDSHAKE ( 202 , "H.S. <class> <server>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACELINK RPL_TRACELINK
+	 * @see #RPL_TRACELINK RPL_TRACELINK
 	 */
 	RPL_TRACEUNKNOWN ( 203 , "???? <class> [<client IP address in dot form>]" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACELINK RPL_TRACELINK
+	 * @see #RPL_TRACELINK RPL_TRACELINK
 	 */
 	RPL_TRACEOPERATOR ( 204 , "Oper <class> <nick>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACELINK RPL_TRACELINK
+	 * @see #RPL_TRACELINK RPL_TRACELINK
 	 */
 	RPL_TRACEUSER ( 205 , "User <class> <nick>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACELINK RPL_TRACELINK
+	 * @see #RPL_TRACELINK RPL_TRACELINK
 	 */
 	RPL_TRACESERVER ( 206 , "Serv <class> <int>S <int>C <server> <nick!user|*!*>@<host|server>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACELINK RPL_TRACELINK
+	 * @see #RPL_TRACELINK RPL_TRACELINK
 	 */
 	RPL_TRACENEWTYPE ( 208 , "<newtype> 0 <client name>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACELINK RPL_TRACELINK
+	 * @see #RPL_TRACELINK RPL_TRACELINK
 	 */
 	RPL_TRACELOG ( 261 , "File <logfile> <debug level>" ),
 
@@ -586,22 +586,22 @@ public enum IrcReplies {
 	RPL_LUSERCLIENT ( 251 , ":There are <integer> users and <integer> invisible on <integer> servers" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_LUSERCLIENT RPL_LUSERCLIENT
+	 * @see #RPL_LUSERCLIENT RPL_LUSERCLIENT
 	 */
 	RPL_LUSEROP ( 252 , "<integer> :operator(s) online" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_LUSERCLIENT RPL_LUSERCLIENT
+	 * @see #RPL_LUSERCLIENT RPL_LUSERCLIENT
 	 */
 	RPL_LUSERUNKNOWN ( 253 , "<integer> :unknown connection(s)" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_LUSERCLIENT RPL_LUSERCLIENT
+	 * @see #RPL_LUSERCLIENT RPL_LUSERCLIENT
 	 */
 	RPL_LUSERCHANNELS ( 254 , "<integer> :channels formed" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_LUSERCLIENT RPL_LUSERCLIENT
+	 * @see #RPL_LUSERCLIENT RPL_LUSERCLIENT
 	 */
 	RPL_LUSERME ( 255 , ":I have <integer> clients and <integer> servers" ),
 
@@ -614,17 +614,17 @@ public enum IrcReplies {
 	RPL_ADMINME ( 256 , "<server> :Administrative info" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_ADMINME RPL_ADMINME
+	 * @see #RPL_ADMINME RPL_ADMINME
 	 */
 	RPL_ADMINLOC1 ( 257 , ":<admin info>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_ADMINME RPL_ADMINME
+	 * @see #RPL_ADMINME RPL_ADMINME
 	 */
 	RPL_ADMINLOC2 ( 258 , ":<admin info>" ),
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_ADMINME RPL_ADMINME
+	 * @see #RPL_ADMINME RPL_ADMINME
 	 */
 	RPL_ADMINEMAIL ( 259 , ":<admin info>" ),
 
@@ -642,77 +642,77 @@ public enum IrcReplies {
 	RPL_TRACECLASS ( 209 , "" ) , 
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_STATSQLINE ( 217 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_SERVICEINFO ( 231 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_ENDOFSERVICES ( 232 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_SERVICE ( 233 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_SERVLIST ( 234 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_SERVLISTEND ( 235 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_WHOISCHANOP ( 316 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_KILLDONE ( 361 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_CLOSING ( 362 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_CLOSEEND ( 363 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_INFOSTART ( 373 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	RPL_MYPORTIS ( 384 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	ERR_YOUWILLBEBANNED ( 466 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS RPL_TRACECLASS
 	 */
 	ERR_BADCHANMASK ( 476 , "" ) ,
 	
 	/**
-	 * @see de.drsilence.ircbot.IrcRelies#RPL_TRACECLASS RPL_TRACECLASS
+	 * @see #RPL_TRACECLASS
 	 */
 	ERR_NOSERVICEHOST ( 492 , "" ) ,
 	
@@ -720,7 +720,7 @@ public enum IrcReplies {
 // Special ERROR not in RFC1459 defined:
 	
 	/**
-	 * Reply is not in RFC1459 defined. costum Rely !? Must be handled.
+	 * Reply is not in RFC1459 defined. costume rely !? Must be handled.
 	 */
 	ERR_NOTDEFINED ( 9999 , "" ) ;
 
@@ -739,7 +739,7 @@ public enum IrcReplies {
 	 * @param err_num IRC-Error/Reply number
 	 * @return        On success Enum represented by err_num else ERR_NOTDEFINED
 	 *                
-	 * @see de.drsilence.ircbot.IrcRelies#ERR_NOTDEFINED ERR_NOTDEFINED
+	 * @see #ERR_NOTDEFINED ERR_NOTDEFINED
 	 */
 	public static IrcReplies getEnumByValue( int err_num ) {
 		IrcReplies t[] = IrcReplies.values();
