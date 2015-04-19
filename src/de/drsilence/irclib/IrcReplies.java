@@ -49,29 +49,29 @@ public enum IrcReplies {
 
 	/**
 	 * 411 - 414 are returned by PRIVMSG to indicate that the message wasn't delivered for some reason. ERR_NOTOPLEVEL 
-	 * and ERR_WILDTOPLEVEL are errors that are returned when an invalid use of "PRIVMSG $<server>" or "PRIVMSG #<host>" 
-	 * is attempted.
+	 * and ERR_WILDTOPLEVEL are errors that are returned when an invalid use of 
+	 * {@literal "PRIVMSG $<server>" or "PRIVMSG #<host>" } is attempted.
 	 */
 	ERR_NORECIPIENT ( 411 , ":No recipient given (<command>)" ) ,
 	
 	/**
 	 * 411 - 414 are returned by PRIVMSG to indicate that the message wasn't delivered for some reason. ERR_NOTOPLEVEL 
-	 * and ERR_WILDTOPLEVEL are errors that are returned when an invalid use of "PRIVMSG $<server>" or "PRIVMSG #<host>" 
-	 * is attempted.
+	 * and ERR_WILDTOPLEVEL are errors that are returned when an invalid use of 
+	 * {@literal "PRIVMSG $<server>" or "PRIVMSG #<host>" } is attempted.
 	 */
 	ERR_NOTEXTTOSEND ( 412 , ":No text to send" ),
 
 	/**
 	 * 411 - 414 are returned by PRIVMSG to indicate that the message wasn't delivered for some reason. ERR_NOTOPLEVEL 
-	 * and ERR_WILDTOPLEVEL are errors that are returned when an invalid use of "PRIVMSG $<server>" or "PRIVMSG #<host>" 
-	 * is attempted.
+	 * and ERR_WILDTOPLEVEL are errors that are returned when an invalid use of 
+	 * {@literal "PRIVMSG $<server>" or "PRIVMSG #<host>" } is attempted.
 	 */
 	ERR_NOTOPLEVEL ( 413 , "<mask> :No toplevel domain specified" ),
 
 	/**
 	 * 411 - 414 are returned by PRIVMSG to indicate that the message wasn't delivered for some reason. ERR_NOTOPLEVEL 
-	 * and ERR_WILDTOPLEVEL are errors that are returned when an invalid use of "PRIVMSG $<server>" or "PRIVMSG #<host>" 
-	 * is attempted.
+	 * and ERR_WILDTOPLEVEL are errors that are returned when an invalid use of 
+	 * {@literal "PRIVMSG $<server>" or "PRIVMSG #<host>" } is attempted.
 	 */
 	ERR_WILDTOPLEVEL ( 414 , "<mask> :Wildcard in toplevel domain" ),
 
@@ -260,7 +260,7 @@ public enum IrcReplies {
 	
 	/**
 	 * Reply format used by USERHOST to list replies to the query list. The reply string is composed as follows: 
-	 * <reply> ::= <nick>['*'] '=' <'+'|'-'><hostname> 
+	 * {@literal <reply> ::= <nick>['*'] '=' <'+'|'-'><hostname>} 
 	 * The '*' indicates whether the client has registered as an Operator. The '-' or '+' characters represent whether
 	 * the client has set an AWAY message or not respectively.
 	 */
@@ -381,16 +381,17 @@ public enum IrcReplies {
 	RPL_SUMMONING ( 342 , "<user> :Summoning user to IRC" ),
 	
 	/**
-	 * Reply by the server showing its version details. The <version> is the version of the software being used
-	 * (including any patchlevel revisions) and the <debuglevel> is used to indicate if the server is running in
-	 * "debug mode". The "comments" field may contain any comments about the version or further version details.
+	 * Reply by the server showing its version details. The {@literal <version>} is the version of the software being 
+	 * used (including any patchlevel revisions) and the {@literal <debuglevel>} is used to indicate if the server is 
+	 * running in "debug mode". The "comments" field may contain any comments about the version or further version 
+	 * details.
 	 */
 	RPL_VERSION ( 351 , "<version>.<debuglevel> <server> :<comments>" ),
 	
 	/**
 	 * The RPL_WHOREPLY and RPL_ENDOFWHO pair are used to answer a WHO message. The RPL_WHOREPLY is only sent if there
 	 * is an appropriate match to the WHO query. If there is a list of parameters supplied with a WHO message, a
-	 * RPL_ENDOFWHO must be sent after processing each list item with <name> being the item.
+	 * RPL_ENDOFWHO must be sent after processing each list item with {@literal <name>} being the item.
 	 */
 	RPL_WHOREPLY ( 352 , "<channel> <user> <host> <server> <nick> <H|G>[*][@|+] :<hopcount> <real name>" ),
 	
