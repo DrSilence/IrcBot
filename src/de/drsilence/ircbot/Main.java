@@ -21,7 +21,7 @@ public class Main {
 	}
 
 	/**
-	 * @param args
+	 * @param args Start params.
 	 */
 	public static void main(String[] args) {
 		
@@ -33,8 +33,8 @@ public class Main {
 
 		IrcConnection irc = new IrcConnection();
 		irc.connect(server, nick, login, pass);
-		irc.irc_cmd_join(channel);
-		irc.run();
+		irc.irc_cmd_join( channel );
+		irc.run( );
 	}
 
 }

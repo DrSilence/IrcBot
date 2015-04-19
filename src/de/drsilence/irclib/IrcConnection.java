@@ -1,19 +1,24 @@
 package de.drsilence.irclib;
 
+import java.lang.Runnable;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.concurrent.locks.ReentrantLock;
 
 
-public class IrcConnection {
+public class IrcConnection implements Runnable {
 	
 	private static final String NEWLINE = "\r\n";
 	
 	private BufferedWriter _writer = null;
 	private BufferedReader _reader = null;
+	
+	private ReentrantLock _lock_writer = new ReentrantLock();
+	private ReentrantLock _lock_reader = new ReentrantLock();
 	
 	public void connect(String server, String nick, String login, String pass) {
 		Socket socket;
@@ -22,14 +27,14 @@ public class IrcConnection {
 			socket = new Socket(server, 6667);
 			_writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream( ) ) );
 			_reader = new BufferedReader( new InputStreamReader(socket.getInputStream( ) ) );
-		} catch (IOException e) {
+		} catch ( IOException e ) {
 			e.printStackTrace();
 		}	
 	
 		// Log on to the server.
-		irc_send_raw("USER " + login + " 8 * : " + NEWLINE);
-		irc_send_raw("PASS " + pass + NEWLINE);
-		irc_send_raw("NICK " + nick + NEWLINE);
+		irc_send_raw( "USER " + login + " 8 * : " + NEWLINE );
+		irc_send_raw( "PASS " + pass + NEWLINE );
+		irc_send_raw( "NICK " + nick + NEWLINE );
 	}
 	
 	public void run() {
@@ -58,21 +63,25 @@ public class IrcConnection {
 		if( _writer == null) {
 			return ;
 		}
+		_lock_writer.lock();
 		try {
 			_writer.write(msg);
 			_writer.flush( );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		_lock_writer.unlock();
 	}
 	
 	public String irc_read_raw() {
 		String ret = null;
+		_lock_reader.lock();
 		try {
 			ret = _reader.readLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		_lock_reader.unlock();
 		return ret;
 	}
 
