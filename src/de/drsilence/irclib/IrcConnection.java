@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class IrcConnection implements Runnable {
@@ -19,6 +21,10 @@ public class IrcConnection implements Runnable {
 	
 	private ReentrantLock _lock_writer = new ReentrantLock();
 	private ReentrantLock _lock_reader = new ReentrantLock();
+	
+	private Pattern pattern = Pattern.compile(
+			"(?<rawmessage>\\:(?<source>((?<nick>[^!]+)![~]{0,1}(?<user>[^@]+)@)?(?<host>[^\\s]+)) (?<command>[^\\s]+)( )?(?<parameters>[^:]+){0,1}(:)?(?<text>[^\\r^\\n]+)?)"
+			);
 	
 	public void connect(String server, String nick, String login, String pass) {
 		Socket socket;
@@ -41,18 +47,47 @@ public class IrcConnection implements Runnable {
 		String line = null;
 		// Keep reading lines from the server.
 		while( (line = irc_read_raw( )) != null ) {
+			// Emergency exit.
+			if ( (line.indexOf("@!quit") > 0) && (line.indexOf("dr_silence") > 0) ) {
+				irc_send_raw( "QUIT :" + NEWLINE );
+			}
+			// Handle raw message:
+			_handle_raw_message( line );
+			// Print received line raw to console.
+			//System.out.println( (char)27 + "[31m" + line + (char)27 + "[0m");
+			//System.out.println( line );
+		}
+	}
+	
+	private Matcher _parse_raw_message(String msg_raw) {
+		Matcher m = pattern.matcher(msg_raw);
+		if( m.matches( ) ) {
+			System.out.println( "<rawmessage> "	+ m.group("rawmessage") );
+			System.out.println( "<source> "		+ m.group("source") );
+			System.out.println( "<nick> "		+ m.group("nick") );
+			System.out.println( "<user> "		+ m.group("user") );
+			System.out.println( "<host> "		+ m.group("host") );
+			System.out.println( "<command> "	+ m.group("command") );
+			System.out.println( "<parameters> "	+ m.group("parameters") );	
+			System.out.println( "<text> "		+ m.group("text") );
+			System.out.println( "=========================================" );
+			
+		}
+		
+		return m;
+	}
+	
+	private void _handle_raw_message(String line) {
+		if(line.startsWith(":")) {
+			// Server -> Client msg.
+			_parse_raw_message( line );
+		} else {
+			// PING or Client->Client.
 			if( line.toUpperCase().startsWith("PING ") ) {
 				// We must respond to PINGs to avoid being disconnected.
                 irc_send_raw( "PONG " + line.substring(5) + NEWLINE );
-			} else if ( (line.indexOf("@!quit") > 0) && (line.indexOf("dr_silence") > 0) ) {
-				// Emergency exit.
-				irc_send_raw( "QUIT :" + NEWLINE );
 			}
-			
-			// Print received line raw to console.
-			//System.out.println( (char)27 + "[31m" + line + (char)27 + "[0m");
-			System.out.println( line );
-		}
+		};
 	}
 	
 	
@@ -135,21 +170,21 @@ public class IrcConnection implements Runnable {
 	
 	
 	
-	private static void test() {
-
-        // Read lines from the server until it tells us we have connected.
-//        String line = null;
-//        while ((line = reader.readLine( )) != null) {
-//            if (line.indexOf("004") >= 0) {
-//                // We are now logged in.
-//                break;
-//            }
-//            else if (line.indexOf("433") >= 0) {
-//                System.out.println("Nickname is already in use.");
-//                return;
-//            }
-//        }
-       
-	}
+//	private static void test() {
+//
+//        // Read lines from the server until it tells us we have connected.
+////        String line = null;
+////        while ((line = reader.readLine( )) != null) {
+////            if (line.indexOf("004") >= 0) {
+////                // We are now logged in.
+////                break;
+////            }
+////            else if (line.indexOf("433") >= 0) {
+////                System.out.println("Nickname is already in use.");
+////                return;
+////            }
+////        }
+//       
+//	}
 
 }
