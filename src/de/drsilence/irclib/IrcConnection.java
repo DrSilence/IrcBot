@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +22,8 @@ public class IrcConnection implements Runnable {
 	
 	private ReentrantLock _lock_writer = new ReentrantLock();
 	private ReentrantLock _lock_reader = new ReentrantLock();
+	
+	private ArrayList<IrcActionEvent> actionHandlers = new ArrayList<IrcActionEvent>();
 	
 	private Pattern pattern = Pattern.compile(
 			"(?<rawmessage>\\:(?<source>((?<nick>[^!]+)![~]{0,1}(?<user>[^@]+)@)?(?<host>[^\\s]+)) (?<command>[^\\s]+)( )?(?<parameters>[^:]+){0,1}(:)?(?<text>[^\\r^\\n]+)?)"
@@ -80,7 +83,16 @@ public class IrcConnection implements Runnable {
 	private void _handle_raw_message(String line) {
 		if(line.startsWith(":")) {
 			// Server -> Client msg.
-			_parse_raw_message( line );
+			Matcher matcher = _parse_raw_message( line );
+			String command = matcher.group("command").trim();
+			if( command.matches("\\d+") ) {
+				// Reply.
+				IrcReplies reply = IrcReplies.getEnumByValue( Integer.parseInt( command ) );
+				_handle_reply( reply );
+			} else {
+				IrcMessages message = IrcMessages.getEnumByValue( command );
+				_handle_messages( message );
+			}
 		} else {
 			// PING or Client->Client.
 			if( line.toUpperCase().startsWith("PING ") ) {
@@ -90,7 +102,158 @@ public class IrcConnection implements Runnable {
 		};
 	}
 	
+	private void _handle_reply(IrcReplies r) {
+		switch(r) {
+		case ERR_ALREADYREGISTRED:
+		case ERR_BADCHANMASK:
+		case ERR_BADCHANNELKEY:
+		case ERR_BANNEDFROMCHAN:
+		case ERR_CANNOTSENDTOCHAN:
+		case ERR_CANTKILLSERVER:
+		case ERR_CHANNELISFULL:
+		case ERR_CHANOPRIVSNEEDED:
+		case ERR_ERRONEUSNICKNAME:
+		case ERR_FILEERROR:
+		case ERR_INVITEONLYCHAN:
+		case ERR_KEYSET:
+		case ERR_NEEDMOREPARAMS:
+		case ERR_NICKCOLLISION:
+		case ERR_NICKNAMEINUSE:
+		case ERR_NOADMININFO:
+		case ERR_NOLOGIN:
+		case ERR_NOMOTD:
+		case ERR_NONICKNAMEGIVEN:
+		case ERR_NOOPERHOST:
+		case ERR_NOORIGIN:
+		case ERR_NOPERMFORHOST:
+		case ERR_NOPRIVILEGES:
+		case ERR_NORECIPIENT:
+		case ERR_NOSERVICEHOST:
+		case ERR_NOSUCHCHANNEL:
+		case ERR_NOSUCHNICK:
+		case ERR_NOSUCHSERVER:
+		case ERR_NOTDEFINED:
+		case ERR_NOTEXTTOSEND:
+		case ERR_NOTONCHANNEL:
+		case ERR_NOTOPLEVEL:
+		case ERR_NOTREGISTERED:
+		case ERR_PASSWDMISMATCH:
+		case ERR_SUMMONDISABLED:
+		case ERR_TOOMANYCHANNELS:
+		case ERR_TOOMANYTARGETS:
+		case ERR_UMODEUNKNOWNFLAG:
+		case ERR_UNKNOWNCOMMAND:
+		case ERR_UNKNOWNMODE:
+		case ERR_USERNOTINCHANNEL:
+		case ERR_USERONCHANNEL:
+		case ERR_USERSDISABLED:
+		case ERR_USERSDONTMATCH:
+		case ERR_WASNOSUCHNICK:
+		case ERR_WILDTOPLEVEL:
+		case ERR_YOUREBANNEDCREEP:
+		case ERR_YOUWILLBEBANNED:
+		case RPL_ADMINEMAIL:
+		case RPL_ADMINLOC1:
+		case RPL_ADMINLOC2:
+		case RPL_ADMINME:
+		case RPL_AWAY:
+		case RPL_BANLIST:
+		case RPL_CHANNELMODEIS:
+		case RPL_CLOSEEND:
+		case RPL_CLOSING:
+		case RPL_ENDOFBANLIST:
+		case RPL_ENDOFINFO:
+		case RPL_ENDOFLINKS:
+		case RPL_ENDOFMOTD:
+		case RPL_ENDOFNAMES:
+		case RPL_ENDOFSERVICES:
+		case RPL_ENDOFSTATS:
+		case RPL_ENDOFUSERS:
+		case RPL_ENDOFWHO:
+		case RPL_ENDOFWHOIS:
+		case RPL_ENDOFWHOWAS:
+		case RPL_INFO:
+		case RPL_INFOSTART:
+		case RPL_INVITING:
+		case RPL_ISON:
+		case RPL_KILLDONE:
+		case RPL_LINKS:
+		case RPL_LIST:
+		case RPL_LISTEND:
+		case RPL_LISTSTART:
+		case RPL_LUSERCHANNELS:
+		case RPL_LUSERCLIENT:
+		case RPL_LUSERME:
+		case RPL_LUSEROP:
+		case RPL_LUSERUNKNOWN:
+		case RPL_MOTD:
+		case RPL_MOTDSTART:
+		case RPL_MYPORTIS:
+		case RPL_NAMREPLY:
+		case RPL_NONE:
+		case RPL_NOTOPIC:
+		case RPL_NOUSERS:
+		case RPL_NOWAWAY:
+		case RPL_REHASHING:
+		case RPL_SERVICE:
+		case RPL_SERVICEINFO:
+		case RPL_SERVLIST:
+		case RPL_SERVLISTEND:
+		case RPL_STATSCLINE:
+		case RPL_STATSCOMMANDS:
+		case RPL_STATSHLINE:
+		case RPL_STATSILINE:
+		case RPL_STATSKLINE:
+		case RPL_STATSLINKINFO:
+		case RPL_STATSLLINE:
+		case RPL_STATSNLINE:
+		case RPL_STATSOLINE:
+		case RPL_STATSQLINE:
+		case RPL_STATSUPTIME:
+		case RPL_STATSYLINE:
+		case RPL_SUMMONING:
+		case RPL_TIME:
+		case RPL_TOPIC:
+		case RPL_TRACECLASS:
+		case RPL_TRACECONNECTING:
+		case RPL_TRACEHANDSHAKE:
+		case RPL_TRACELINK:
+		case RPL_TRACELOG:
+		case RPL_TRACENEWTYPE:
+		case RPL_TRACEOPERATOR:
+		case RPL_TRACESERVER:
+		case RPL_TRACEUNKNOWN:
+		case RPL_TRACEUSER:
+		case RPL_UMODEIS:
+		case RPL_UNAWAY:
+		case RPL_USERHOST:
+		case RPL_USERS:
+		case RPL_USERSSTART:
+		case RPL_VERSION:
+		case RPL_WHOISCHANNELS:
+		case RPL_WHOISCHANOP:
+		case RPL_WHOISIDLE:
+		case RPL_WHOISOPERATOR:
+		case RPL_WHOISSERVER:
+		case RPL_WHOISUSER:
+		case RPL_WHOREPLY:
+		case RPL_WHOWASUSER:
+		case RPL_YOUREOPER:
+		default:
+			break;
+		
+		}
+	}
 	
+	private void _handle_messages(IrcMessages m) {
+		switch(m) {
+		case TEST_NAME:
+			break;
+		default:
+			break;
+		
+		}
+	}
 	
 	
 	

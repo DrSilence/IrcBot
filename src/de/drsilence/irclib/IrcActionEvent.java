@@ -27,4 +27,5 @@ public abstract class IrcActionEvent {
 	public void event_dcc_chat_req(IrcConnection ircio, String nick, String addr, long ddcid) { }
 	public void event_dcc_send_req(IrcConnection ircio, String nick, String addr, String filename, long size, long ddcid) { }
 	
+	public void event_raw(IrcConnection ircio, String event, String[] params) { }
 }
