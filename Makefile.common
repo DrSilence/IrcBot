@@ -1,0 +1,33 @@
+############################################
+# Makefile.common - called by all Makefiles
+#
+PRJ				?= PRJ_NOT_DEFINED 
+TESTNAME		?= TESTNAME_NOT_DEFINED
+
+MK_CLASSPATH	?= $(PRJ)/class
+MK_LOGPATH		?= $(PRJ)/log
+
+COMPILER		:= javac
+COMPILE_OPTIONS	:= -d $(MK_CLASSPATH) -classpath $(MK_CLASSPATH)
+
+include ./filelist.mk
+#@echo '$(filelist)'
+
+.PHONY: compile run clean
+compile: $(MK_LOGPATH)/filelist.log
+	@echo "Compile complete. Filelist is '$(MK_LOGPATH)/filelist.log'. To run test: make run TESTNAME=Testx"
+
+$(MK_LOGPATH)/filelist.log: $(filelist)
+	@mkdir -p $(MK_CLASSPATH) $(MK_LOGPATH)
+	$(COMPILER) $(COMPILE_OPTIONS) $?
+	@echo $1 |sed 's# #\n#g' > $(MK_LOGPATH)/filelist.log
+
+$(MK_LOGPATH)/$(TESTNAME).log: $(MK_LOGPATH)/filelist.log
+	java -classpath $(MK_CLASSPATH) $(TESTNAME) | tee $(MK_LOGPATH)/$(TESTNAME).log
+
+run: $(MK_LOGPATH)/$(TESTNAME).log
+	@echo "Results are in '$(MK_LOGPATH)/$(TESTNAME).log'. Before re-running 'rm $(MK_LOGPATH)/$(TESTNAME).log' or 'make clean'"
+
+clean:
+	rm -f $(MK_LOGPATH)/*.log $(MK_CLASSPATH)/*.class
+
