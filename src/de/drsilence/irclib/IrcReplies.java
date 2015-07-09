@@ -721,7 +721,7 @@ public enum IrcReplies {
 // Special ERROR not in RFC1459 defined:
 	
 	/**
-	 * Reply is not in RFC1459 defined. costume rely !? Must be handled.
+	 * Reply is not in RFC1459 defined. costume reply !? Must be handled.
 	 */
 	ERR_NOTDEFINED ( 9999 , "" ) ;
 

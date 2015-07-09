@@ -1,0 +1,13 @@
+BIN			= IrcBot.jar
+VERSION		= 0.0.0.1
+DEPENDFILE	= .depend
+
+JFLAGS	= -g
+JC		= javac
+RM		= rm -rf
+
+.SUFFIXES: .java .class
+.java.class:
+	$(JC) $(JFLAGS) $*.java
+
+

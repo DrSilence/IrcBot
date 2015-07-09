@@ -2,7 +2,6 @@ package de.drsilence.irclib;
 
 public abstract class IrcActionEvent {
 
-	
 	public void event_connect(IrcConnection ircio, String event, String origin, String[] params) { }
 	public void event_nick(IrcConnection ircio, String event, String origin, String[] params) { }
 	public void event_quit(IrcConnection ircio, String event, String origin, String[] params) { }
@@ -28,4 +27,6 @@ public abstract class IrcActionEvent {
 	public void event_dcc_send_req(IrcConnection ircio, String nick, String addr, String filename, long size, long ddcid) { }
 	
 	public void event_raw(IrcConnection ircio, String event, String[] params) { }
+
 }
+

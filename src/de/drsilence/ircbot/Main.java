@@ -35,6 +35,7 @@ public class Main {
 		irc.connect(server, nick, login, pass);
 		irc.irc_cmd_join( channel );
 		irc.run( );
+
         
 	}
 

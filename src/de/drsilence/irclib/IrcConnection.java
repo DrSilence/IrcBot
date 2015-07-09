@@ -24,6 +24,8 @@ public class IrcConnection implements Runnable {
 	private ReentrantLock _lock_reader = new ReentrantLock();
 	
 	private ArrayList<IrcActionEvent> actionHandlers = new ArrayList<IrcActionEvent>();
+
+	private Boolean _printDebug = true;
 	
 	private Pattern pattern = Pattern.compile(
 			"(?<rawmessage>\\:(?<source>((?<nick>[^!]+)![~]{0,1}(?<user>[^@]+)@)?(?<host>[^\\s]+)) (?<command>[^\\s]+)( )?(?<parameters>[^:]+){0,1}(:)?(?<text>[^\\r^\\n]+)?)"
@@ -64,19 +66,18 @@ public class IrcConnection implements Runnable {
 	
 	private Matcher _parse_raw_message(String msg_raw) {
 		Matcher m = pattern.matcher(msg_raw);
-		if( m.matches( ) ) {
+		if( m.matches( ) && _printDebug ) {
 			System.out.println( "<rawmessage> "	+ m.group("rawmessage") );
 			System.out.println( "<source> "		+ m.group("source") );
 			System.out.println( "<nick> "		+ m.group("nick") );
 			System.out.println( "<user> "		+ m.group("user") );
 			System.out.println( "<host> "		+ m.group("host") );
 			System.out.println( "<command> "	+ m.group("command") );
-			System.out.println( "<parameters> "	+ m.group("parameters") );	
+			System.out.println( "<parameters> "	+ m.group("parameters") );
 			System.out.println( "<text> "		+ m.group("text") );
 			System.out.println( "=========================================" );
 			
 		}
-		
 		return m;
 	}
 	
@@ -88,7 +89,8 @@ public class IrcConnection implements Runnable {
 			if( command.matches("\\d+") ) {
 				// Reply.
 				IrcReplies reply = IrcReplies.getEnumByValue( Integer.parseInt( command ) );
-				_handle_reply( reply );
+				String[] params = new String[8];
+				_handle_reply( reply, params );
 			} else {
 				IrcMessages message = IrcMessages.getEnumByValue( command );
 				_handle_messages( message );
@@ -97,12 +99,12 @@ public class IrcConnection implements Runnable {
 			// PING or Client->Client.
 			if( line.toUpperCase().startsWith("PING ") ) {
 				// We must respond to PINGs to avoid being disconnected.
-                irc_send_raw( "PONG " + line.substring(5) + NEWLINE );
+				irc_send_raw( "PONG " + line.substring(5) + NEWLINE );
 			}
 		};
 	}
 	
-	private void _handle_reply(IrcReplies r) {
+	private void _handle_reply(IrcReplies r, String[] params) {
 		switch(r) {
 		case ERR_ALREADYREGISTRED:
 		case ERR_BADCHANMASK:
@@ -239,6 +241,9 @@ public class IrcConnection implements Runnable {
 		case RPL_WHOREPLY:
 		case RPL_WHOWASUSER:
 		case RPL_YOUREOPER:
+			for( IrcActionEvent e : actionHandlers ) {
+				e.event_raw(this, r.getErrorString(), params );
+			}
 		default:
 			break;
 		
@@ -247,7 +252,7 @@ public class IrcConnection implements Runnable {
 	
 	private void _handle_messages(IrcMessages m) {
 		switch(m) {
-		case TEST_NAME:
+		case IRCMSG_UNKNOWN: 
 			break;
 		default:
 			break;
