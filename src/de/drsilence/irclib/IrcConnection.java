@@ -23,13 +23,22 @@ public class IrcConnection implements Runnable {
 	private ReentrantLock _lock_writer = new ReentrantLock();
 	private ReentrantLock _lock_reader = new ReentrantLock();
 	
-	private ArrayList<IrcActionEvent> actionHandlers = new ArrayList<IrcActionEvent>();
+	private ArrayList<IrcActionEvent> _actionHandlers = new ArrayList<IrcActionEvent>();
 
-	private Boolean _printDebug = true;
+	private Boolean _printDebug = false;
 	
 	private Pattern pattern = Pattern.compile(
-			"(?<rawmessage>\\:(?<source>((?<nick>[^!]+)![~]{0,1}(?<user>[^@]+)@)?(?<host>[^\\s]+)) (?<command>[^\\s]+)( )?(?<parameters>[^:]+){0,1}(:)?(?<text>[^\\r^\\n]+)?)"
+			"(?<rawmessage>\\:(?<source>((?<nick>[^!]+)![~]{0,1}(?<user>[^@]+)@)?(?<host>[^\\s]+)) " +
+			"(?<command>[^\\s]+)( )?(?<parameters>[^:]+){0,1}(:)?(?<text>[^\\r^\\n]+)?)"
 			);
+	
+	public void addIrcActionEvent(IrcActionEvent e) {
+		_actionHandlers.add(e);
+	}
+	
+	public void removeIrcActionEvent(IrcActionEvent e) {
+		_actionHandlers.remove(e);
+	}
 	
 	public void connect(String server, String nick, String login, String pass) {
 		Socket socket;
@@ -56,17 +65,25 @@ public class IrcConnection implements Runnable {
 			if ( (line.indexOf("@!quit") > 0) && (line.indexOf("dr_silence") > 0) ) {
 				irc_send_raw( "QUIT :" + NEWLINE );
 			}
-			// Handle raw message:
-			_handle_raw_message( line );
 			// Print received line raw to console.
 			//System.out.println( (char)27 + "[31m" + line + (char)27 + "[0m");
-			//System.out.println( line );
+			System.out.println( line );
+			
+			// Handle raw message:
+			_handle_raw_message( line );
 		}
 	}
 	
 	private Matcher _parse_raw_message(String msg_raw) {
 		Matcher m = pattern.matcher(msg_raw);
 		if( m.matches( ) && _printDebug ) {
+			_print_raw_matcher(m);
+		}
+		return m;
+	}
+	
+	private Matcher _print_raw_matcher(Matcher m) {
+		if( m.matches( ) ) {
 			System.out.println( "<rawmessage> "	+ m.group("rawmessage") );
 			System.out.println( "<source> "		+ m.group("source") );
 			System.out.println( "<nick> "		+ m.group("nick") );
@@ -76,7 +93,6 @@ public class IrcConnection implements Runnable {
 			System.out.println( "<parameters> "	+ m.group("parameters") );
 			System.out.println( "<text> "		+ m.group("text") );
 			System.out.println( "=========================================" );
-			
 		}
 		return m;
 	}
@@ -84,16 +100,15 @@ public class IrcConnection implements Runnable {
 	private void _handle_raw_message(String line) {
 		if(line.startsWith(":")) {
 			// Server -> Client msg.
-			Matcher matcher = _parse_raw_message( line );
+			Matcher matcher = _parse_raw_message( line.replaceAll("[\\^]", "X") );
 			String command = matcher.group("command").trim();
 			if( command.matches("\\d+") ) {
 				// Reply.
 				IrcReplies reply = IrcReplies.getEnumByValue( Integer.parseInt( command ) );
-				String[] params = new String[8];
-				_handle_reply( reply, params );
+				_handle_reply( reply, matcher );
 			} else {
 				IrcMessages message = IrcMessages.getEnumByValue( command );
-				_handle_messages( message );
+				_handle_messages( message, matcher );
 			}
 		} else {
 			// PING or Client->Client.
@@ -104,7 +119,7 @@ public class IrcConnection implements Runnable {
 		};
 	}
 	
-	private void _handle_reply(IrcReplies r, String[] params) {
+	private void _handle_reply(IrcReplies r, Matcher m) {
 		switch(r) {
 		case ERR_ALREADYREGISTRED:
 		case ERR_BADCHANMASK:
@@ -241,20 +256,69 @@ public class IrcConnection implements Runnable {
 		case RPL_WHOREPLY:
 		case RPL_WHOWASUSER:
 		case RPL_YOUREOPER:
-			for( IrcActionEvent e : actionHandlers ) {
-				e.event_raw(this, r.getErrorString(), params );
-			}
 		default:
+			for( IrcActionEvent e : _actionHandlers ) {
+				e.eventNumeric(this, r, m);
+				e.eventRaw(this, m );
+			}
 			break;
 		
 		}
 	}
 	
-	private void _handle_messages(IrcMessages m) {
+	private void _handle_messages(IrcMessages m, Matcher mm) {
 		switch(m) {
-		case IRCMSG_UNKNOWN: 
-			break;
+		case MSG_UNKNOWN: 
+		case MSG_ADMIN:
+		case MSG_AWAY:
+		case MSG_CONNECT:
+		case MSG_DIE:
+		case MSG_ERROR:
+		case MSG_INFO:
+		case MSG_INVITE:
+		case MSG_ISON:
+		case MSG_JOIN:
+		case MSG_KICK:
+		case MSG_KILL:
+		case MSG_LINKS:
+		case MSG_LIST:
+		case MSG_LUSERS:
+		case MSG_MODE:
+		case MSG_MOTD:
+		case MSG_NAMES:
+		case MSG_NICK:
+		case MSG_NOTICE:
+		case MSG_OPER:
+		case MSG_PART:
+		case MSG_PASS:
+		case MSG_PING:
+		case MSG_PONG:
+		case MSG_PRIVMSG:
+		case MSG_QUIT:
+		case MSG_REHASH:
+		case MSG_RESTART:
+		case MSG_SERVICE:
+		case MSG_SERVLIST:
+		case MSG_SQUERY:
+		case MSG_SQUIT:
+		case MSG_STATS:
+		case MSG_SUMMON:
+		case MSG_TIME:
+		case MSG_TOPIC:
+		case MSG_TRACE:
+		case MSG_USER:
+		case MSG_USERHOST:
+		case MSG_USERS:
+		case MSG_VERSION:
+		case MSG_WALLOPS:
+		case MSG_WHO:
+		case MSG_WHOIS:
+		case MSG_WHOWAS:
 		default:
+			for( IrcActionEvent e : _actionHandlers ) {
+				e.eventMsg(this, m, mm);
+				e.eventRaw(this, mm );
+			}
 			break;
 		
 		}
