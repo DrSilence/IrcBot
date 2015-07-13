@@ -10,7 +10,6 @@ import de.drsilence.irclib.IrcConnection;
 import de.drsilence.irclib.IrcMessages;
 
 
-
 /**
  * @author drsilence
  *
