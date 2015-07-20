@@ -61,14 +61,11 @@ public class IrcConnection implements Runnable {
 		String line = null;
 		// Keep reading lines from the server.
 		while( (line = irc_read_raw( )) != null ) {
+			///TODO: Remove Emergency exit.
 			// Emergency exit.
 			if ( (line.indexOf("@!quit") > 0) && (line.indexOf("dr_silence") > 0) ) {
 				irc_send_raw( "QUIT :" + NEWLINE );
 			}
-			// Print received line raw to console.
-			//System.out.println( (char)27 + "[31m" + line + (char)27 + "[0m");
-			System.out.println( line );
-			
 			// Handle raw message:
 			_handle_raw_message( line );
 		}
@@ -100,7 +97,12 @@ public class IrcConnection implements Runnable {
 	private void _handle_raw_message(String line) {
 		if(line.startsWith(":")) {
 			// Server -> Client msg.
-			Matcher matcher = _parse_raw_message( line.replaceAll("[\\^]", "X") );
+			///TODO: fix problem with matcher not being able to macht '^' in <text> -> no match in <command>
+			Matcher matcher = _parse_raw_message( line/*.replaceAll("[\\^]", "X")*/ );
+			if( !matcher.matches() ) {
+				System.err.println("Error: Cant match raw line -> '"+line+"'");
+				return ;
+			}
 			String command = matcher.group("command").trim();
 			if( command.matches("\\d+") ) {
 				// Reply.
@@ -324,8 +326,6 @@ public class IrcConnection implements Runnable {
 		}
 	}
 	
-	
-	
 	public void irc_send_raw(String msg) {
 		if( _writer == null) {
 			return ;
@@ -353,42 +353,37 @@ public class IrcConnection implements Runnable {
 	}
 
 	
+	
 // Managing the IRC channels: joining, leaving, inviting
 	
-	public void irc_cmd_join(String channel) {
-		// Join the channel.
-		irc_send_raw( "JOIN " + channel + NEWLINE );
-	}
-	
-	public void irc_cmd_part(String channel) {
-		irc_send_raw( "PART " + channel + NEWLINE );
-	}
+	public void irc_cmd_join(String channel) { irc_send_raw( "JOIN " + channel + NEWLINE ); }
+	public void irc_cmd_part(String channel) { irc_send_raw( "PART " + channel + NEWLINE ); }
 //	irc_cmd_invite
-//	irc_cmd_names
+	public void irc_cmd_names(String channel) { irc_send_raw( "NAMES " + channel + NEWLINE); }
 //	irc_cmd_list
 //	irc_cmd_topic
 //	irc_cmd_channel_mode
 //	irc_cmd_user_mode
-//	irc_cmd_kick
+	public void irc_cmd_kick(String channel, String name, String comment) { irc_send_raw( "KICK " + channel + " " + name + " :" + comment ); }
 	
 // Sending the messages, notices, /me messages and working with CTCP
 	
-	public void irc_cmd_msg(String target, String text) {
-		irc_send_raw( "PRIVMSG " + target + " " + text + NEWLINE );
-	}
+	public void irc_cmd_msg(String target, String text) { irc_send_raw( "PRIVMSG " + target + " :" + text + NEWLINE ); }
 //	irc_cmd_me
 //	irc_cmd_notice
 //	irc_cmd_ctcp_request
 //	irc_cmd_ctcp_reply
 	
 // Miscellaneous: library version, changing nick, quitting
+	
 //	irc_cmd_nick
 //	irc_cmd_whois
-//	irc_cmd_quit
+	public void irc_cmd_quit(String msg) { irc_send_raw("QUIT :" + msg + NEWLINE); }
 //	irc_target_get_nick
 //	irc_target_get_host
 	
 // DCC initiating and accepting chat sessions, sending and receiving files
+	
 //	irc_dcc_chat
 //	irc_dcc_msg
 //	irc_dcc_accept
