@@ -75,7 +75,7 @@ public class Main {
 		});
 		irc.connect(server, nick, login, pass);
 		irc.irc_cmd_join( channel );
-		irc.irc_cmd_join("#northernlion");
+		//irc.irc_cmd_join("#northernlion");
 		// Send Irc v3 req to enable join/part notifies:
 		irc.irc_send_raw("CAP REQ :twitch.tv/membership\r\n");
 		irc.run( ); // BLOCKING !
