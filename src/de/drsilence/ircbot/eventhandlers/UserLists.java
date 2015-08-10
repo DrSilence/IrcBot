@@ -92,6 +92,15 @@ public class UserLists extends IrcActionEvent {
 		if(c!=null) c.removeUser(nick);
 	}
 
+	public List<String> getUsers(String channel) {
+		IrcChannel c = findChannel(channel);
+		if(c==null) return null;
+		List<String> l = new ArrayList();
+		for(IrcUser u : c.users) l.add( u.modes + "|" + u.nick );
+		return l;
+	}
+
+
 
 	@Override
 	public void eventMsg(IrcConnection ircio, IrcMessages msg, Matcher m) {
@@ -101,6 +110,12 @@ public class UserLists extends IrcActionEvent {
 		String modes 	= "";
 		switch( msg ) {
 			case MSG_PRIVMSG:
+				String txt = m.group("text").trim();
+				if( txt.startsWith("!debug_userlist") ) {
+					List<String> u = getUsers("#da_checker");
+					for( String s : u )
+						System.err.println(s);
+				}
 			case MSG_JOIN:
 				nick 	= m.group("nick").trim();
 				channel = m.group("parameters").trim();
