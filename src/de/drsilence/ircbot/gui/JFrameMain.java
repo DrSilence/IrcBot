@@ -5,19 +5,21 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import java.awt.Dimension;
-import java.awt.ComponentOrientation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class JFrameMain extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8484264455455427119L;
 	private JPanel contentPane;
 
 	/**
@@ -64,7 +66,6 @@ public class JFrameMain extends JFrame {
 		mntmExit.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				dispose();
 			}
 		});

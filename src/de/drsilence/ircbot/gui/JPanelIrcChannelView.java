@@ -1,5 +1,6 @@
 package de.drsilence.ircbot.gui;
 
+
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
