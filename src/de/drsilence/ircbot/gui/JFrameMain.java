@@ -56,6 +56,9 @@ public class JFrameMain extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		panel.add(tabbedPane);
 		
+		JPanelSettings panelSettings = new JPanelSettings();
+		tabbedPane.addTab("Settings", null, panelSettings, null);
+		
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 		
