@@ -32,6 +32,12 @@ public abstract class Json {
 	private static final char WHITESPACE4		= 0x0D; // NL/CR
 	private static final String CONTROL_CHARS	= ",:\\\"}]{[";
 	
+	/**
+	 * Default Json exception. 
+	 *
+	 * @version 2015-10-03
+	 * @author drsilence
+	 */
 	public static class JsonException extends RuntimeException {
 		private static final long serialVersionUID = -788693661109706440L;
 		private String reason;
@@ -53,6 +59,12 @@ public abstract class Json {
 	    }
 	}
 
+	/**
+	 * Simple char-stream tokenizer. Each token is a char.
+	 * 
+	 * @author drsilence
+	 * @version 2015-10-03
+	 */
 	public static class JsonTokenizer {
 		Reader reader;
 		int countChars;
