@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Lazy RFC4627 implementation. See http://tools.ietf.org/rfc/rfc4627.txt
  * 
  * @author drsilence
- * 
- * lazy RFC4627 implementation. See http://tools.ietf.org/rfc/rfc4627.txt
- *
+ * @version 2015-10-03
  */
 public abstract class Json {
 	
@@ -35,8 +34,8 @@ public abstract class Json {
 	/**
 	 * Default Json exception. 
 	 *
-	 * @version 2015-10-03
 	 * @author drsilence
+	 * @version 2015-10-03
 	 */
 	public static class JsonException extends RuntimeException {
 		private static final long serialVersionUID = -788693661109706440L;
@@ -73,6 +72,12 @@ public abstract class Json {
 		boolean usePrevChar;
 		boolean isEOF;
 		
+		/**
+		 * Constructs a new instance of JsonTokener based on a Reader.
+		 * 
+		 * @param reader
+		 * 		A Reader to read chars from.
+		 */
 		public JsonTokenizer(Reader reader) {
 			super();
 			this.reader = reader;
@@ -83,10 +88,27 @@ public abstract class Json {
 			this.isEOF = false;
 		}
 		
+		/**
+		 * Determine if another readable char is ready to read.
+		 * 
+		 * @return
+		 * 		true if another char can be read,
+		 * 		false if EOF.
+		 */
 		public boolean hasNext() {
 			return ( isEOF && !usePrevChar );
 		}
 		
+		/**
+		 * Get the next char from stream or the last back pushed one.
+		 * 
+		 * @return
+		 * 		one char,
+		 * 		0 if EOF.
+		 * 
+		 * @throws JsonException
+		 * 		
+		 */
 		public char getNext() throws JsonException {
 			int c;
 			if(usePrevChar) {
@@ -113,6 +135,16 @@ public abstract class Json {
 			return prevChar;
 		}
 		
+		/**
+		 * Get the next (not whitespace) char from stream or the last back pushed one.
+		 * 
+		 * @return
+		 * 		one char,
+		 * 		0 if EOF.
+		 * 
+		 * @throws JsonException
+		 * 
+		 */
 		public char getNextValid() throws JsonException {
 			char c;
 			while(true) {
@@ -123,6 +155,17 @@ public abstract class Json {
 			}
 		}
 		
+		/**
+		 * Read a String on Stream until the end-char " is hit.
+		 * Based on RFC4627 escaped chars will be substituted.
+		 * No .trim() will be performed. 
+		 * 
+		 * @return
+		 * 		Parsed chars as String (not including ending quote).
+		 * 
+		 * @throws JsonException
+		 * 
+		 */
 		public String getString() throws JsonException {
 			StringBuilder sb = new StringBuilder();
 			char c;
@@ -180,6 +223,13 @@ public abstract class Json {
 			}//while(true)
 		}//getString()
 		
+		/**
+		 * Push last read char back, so it can be red again.
+		 * Only one push back is allowed.
+		 * 
+		 * @throws JsonException
+		 * 		On any attempt to push more than one char back.
+		 */
 		public void back() throws JsonException {
 			if(usePrevChar) {
 				throw new JsonException("Stepping two back is not implemented yet.");
@@ -255,21 +305,47 @@ public abstract class Json {
 			return s;
 		}//getNextObject()
 		
+		/**
+		 * Generates a String that somewhat describes the current Reader read position.
+		 * 
+		 * @return
+		 * 		A String in form "... at line <%d> char <%d> actual char is '<%c>'"
+		 */
 		public String getPosition() {
 			return new String("JsonTokenizer at line "+countLines+" char "+countChars+" actual char is '"+prevChar+"'.");
 		}
 		
 	}//class JsonTokenizer
 	
+	
+	/**
+	 * This class represents a Json object.
+	 * 
+	 * @author drsilence
+	 * @version 2015-10-03
+	 */
 	public static class JsonObject {
 		private Map<String, Object> pairs; 
 		
+		/**
+		 * Constructs an empty instance.
+		 * 
+		 */
 		public JsonObject() {
 			super();
 			this.pairs = new HashMap<String, Object>();
-//			throw new JsonException("Not implementet yet.");
 		}
 		
+		/**
+		 * Builds a JsonObject based on json-data in stream.
+		 * 
+		 * @param t
+		 * 		A JsonTokenizer to read from.
+		 * 
+		 * @throws JsonException
+		 * 		If no valid json-object can be read from stream.
+		 * 
+		 */
 		public JsonObject(JsonTokenizer t) throws JsonException {
 			this();
 			char c;
@@ -283,7 +359,6 @@ public abstract class Json {
 				return ;
 			}
 			t.back();
-			
 			while(true) {
 				c = t.getNextValid();
 				if( c != CHAR_STRING ) {
@@ -324,14 +399,15 @@ public abstract class Json {
 		public String toString(String c) {
 			//TODO:
 			StringBuilder sb = new StringBuilder();
-			sb.append(BEGIN_OBJECT + "\n" );
+			sb.append(BEGIN_OBJECT);
 			for(Map.Entry<String, Object> e : pairs.entrySet()) {
 				String k = e.getKey();
 				Object o = e.getValue();
 				
+				sb.append(WHITESPACE4); //NL
 				sb.append(c);
 				sb.append(k);
-				sb.append(" : ");
+				sb.append(" "+NAME_SEPERATOR+" ");
 				String os="";
 				if( o == null ) {
 					sb.append("null");
@@ -345,25 +421,47 @@ public abstract class Json {
 					os = o.toString();
 				}
 				sb.append(os);
-				sb.append(",\n");
+				sb.append(VALUE_SEPERATOR);
 				
 			}
-			sb.setLength(sb.length()-2);
-			sb.append("\n"+c+END_OBCJECT);
+			sb.setLength(sb.length()-1);
+			sb.append(WHITESPACE4); // NL
+			sb.append(c);
+			sb.append(END_OBCJECT);
 			return sb.toString();
 		}
 		
 	}//class JsonObject
 	
+	/**
+	 * This class represents a Json-array.
+	 * 
+	 * @author drsilence
+	 * @version 2015-10-03
+	 */
 	public static class JsonArray {
 		private List<Object> list;
 		
+		/**
+		 * Constructs an empty instance.
+		 * 
+		 */
 		public JsonArray() {
 			super();
 			this.list = new ArrayList<Object>();
 //			throw new JsonException("Not implementet yet.");
 		}
 		
+		/**
+		 * Builds a JsonArray based on json-data in stream.
+		 * 
+		 * @param t
+		 * 		A JsonTokenizer to read from.
+		 * 
+		 * @throws JsonException
+		 * 		If no valid json-array can be read from stream.
+		 * 
+		 */
 		public JsonArray(JsonTokenizer t) throws JsonException {
 			this();
 			char c;
