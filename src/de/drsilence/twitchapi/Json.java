@@ -417,6 +417,8 @@ public abstract class Json {
 					os = ((JsonObject)o).toString(c+c);
 				} else if( o instanceof JsonArray ) {
 //					os = ((JsonArray)o).toString(c+c);
+				} else if( o instanceof String ){
+					os = CHAR_STRING + ((String)o).toString() + CHAR_STRING;
 				} else {
 					os = o.toString();
 				}

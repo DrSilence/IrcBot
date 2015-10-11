@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -42,6 +44,33 @@ public class TwitchAPI {
 		this.isAuthDone = false;
 	}
 	
+	private String doRequest(String method, String url) {
+		StringBuilder sb = new StringBuilder();
+		URL u;
+		try {
+			u = new URL(BASEURL + url);
+			HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+			conn.setDoInput(true);
+			//give server some time to respond:
+			String ret = conn.getResponseCode() + " : " + conn.getResponseMessage();
+			//handle server output:
+			InputStream r = conn.getInputStream();
+			int c;
+			while((c=r.read())!=-1) {
+				sb.append((char)c);
+//				System.err.print((char)c);
+			}
+			conn.disconnect();
+//			System.err.println(ret+"\n"+sb.toString());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return sb.toString();
+	}
+	
 	private String doRequest(String fmt) {
 		StringBuilder jsonRaw = new StringBuilder();
 		try ( 
@@ -67,11 +96,12 @@ public class TwitchAPI {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		
+		TwitchAPI api = new TwitchAPI();
 		String jsonRaw;
-//		jsonRaw = doRequest("");
-//		jsonRaw = doRequest("/channels/grand_poobear/subscriptions");
-		jsonRaw = "{\"_links\":{\"user\":\"https://api.twitch.tv/kraken/user\",\"channel\":\"https://api.twitch.tv/kraken/channel\",\"search\":\"https://api.twitch.tv/kraken/search\",\"streams\":\"https://api.twitch.tv/kraken/streams\",\"ingests\":\"https://api.twitch.tv/kraken/ingests\",\"teams\":\"https://api.twitch.tv/kraken/teams\"},\"token\":{\"valid\":false,\"authorization\":null}}";
+		jsonRaw = api.doRequest("GET", "");
+//		jsonRaw = api.doRequest("");
+//		jsonRaw = api.doRequest("/channel");
+//		jsonRaw = "{\"_links\":{\"user\":\"https://api.twitch.tv/kraken/user\",\"channel\":\"https://api.twitch.tv/kraken/channel\",\"search\":\"https://api.twitch.tv/kraken/search\",\"streams\":\"https://api.twitch.tv/kraken/streams\",\"ingests\":\"https://api.twitch.tv/kraken/ingests\",\"teams\":\"https://api.twitch.tv/kraken/teams\"},\"token\":{\"valid\":false,\"authorization\":null}}";
 /*
  * 	{
  * 		"_links":{
@@ -88,7 +118,7 @@ public class TwitchAPI {
  * 		}
  * }
  */
-		System.out.println(jsonRaw);
+//		System.out.println(jsonRaw);
 		
 		try {
 			Object o = Json.parse(jsonRaw);
